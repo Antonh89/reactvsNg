@@ -1,18 +1,9 @@
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import useSWR from "swr";
-import useSWRMutation from "swr/mutation";
-import {
-  TODOS_KEY,
-  createTodo,
-  fetchTodos,
-  nextLocalId,
-  removeTodo,
-  toggleTodo,
-} from "../../api/todos";
 import { Button } from "../../components/Button/Button";
 import { ConfirmDialog } from "../../components/ConfirmDialog/ConfirmDialog";
 import { Input } from "../../components/Input/Input";
+import { useApiTodos } from "../../hooks/useApiTodos";
 import type { Todo, TodoFilter } from "../../types";
 import { TodoItem } from "./TodoItem";
 import styles from "./TodosPage.module.scss";
@@ -29,41 +20,21 @@ const filterOptions: { value: TodoFilter; label: string }[] = [
   { value: "remaining", label: "Restants" },
 ];
 
-function optimisticOptions(project: (todos: Todo[]) => Todo[]) {
-  return {
-    optimisticData: (current?: Todo[]) => project(current ?? []),
-    populateCache: (_result: unknown, current: Todo[] | undefined) =>
-      project(current ?? []),
-    revalidate: false,
-    rollbackOnError: true,
-  };
-}
-
 export function TodosPage() {
   const [filter, setFilter] = useState<TodoFilter>("all");
   const [pendingDeletion, setPendingDeletion] = useState<Todo | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
   const {
-    data: todos,
+    todos,
     error,
     isLoading,
-  } = useSWR<Todo[]>(TODOS_KEY, fetchTodos);
-
-  const { trigger: triggerCreate, isMutating: isCreating } = useSWRMutation(
-    TODOS_KEY,
-    (_key: string, { arg }: { arg: string }) => createTodo(arg)
-  );
-
-  const { trigger: triggerToggle } = useSWRMutation(
-    TODOS_KEY,
-    (_key: string, { arg }: { arg: Todo }) => toggleTodo(arg)
-  );
-
-  const { trigger: triggerRemove, isMutating: isRemoving } = useSWRMutation(
-    TODOS_KEY,
-    (_key: string, { arg }: { arg: Todo }) => removeTodo(arg)
-  );
+    create,
+    toggle,
+    remove,
+    isCreating,
+    isRemoving,
+  } = useApiTodos();
 
   const {
     register,
@@ -98,21 +69,10 @@ export function TodosPage() {
   }, [todos, filter]);
 
   const onSubmit = handleSubmit(async ({ title }) => {
-    const trimmed = title.trim();
-    const optimistic: Todo = {
-      userId: 1,
-      id: nextLocalId(todos ?? []),
-      title: trimmed,
-      completed: false,
-    };
-
     setActionError(null);
 
     try {
-      await triggerCreate<Todo[]>(
-        trimmed,
-        optimisticOptions((current) => [optimistic, ...current])
-      );
+      await create(title.trim());
       reset();
     } catch {
       setActionError("L'ajout a échoué, la liste a été restaurée.");
@@ -123,14 +83,7 @@ export function TodosPage() {
     setActionError(null);
 
     try {
-      await triggerToggle<Todo[]>(
-        todo,
-        optimisticOptions((current) =>
-          current.map((item) =>
-            item.id === todo.id ? { ...item, completed: !item.completed } : item
-          )
-        )
-      );
+      await toggle(todo);
     } catch {
       setActionError("La mise à jour a échoué, la liste a été restaurée.");
     }
@@ -144,12 +97,7 @@ export function TodosPage() {
     setActionError(null);
 
     try {
-      await triggerRemove<Todo[]>(
-        pendingDeletion,
-        optimisticOptions((current) =>
-          current.filter((item) => item.id !== pendingDeletion.id)
-        )
-      );
+      await remove(pendingDeletion);
       setPendingDeletion(null);
     } catch {
       setActionError("La suppression a échoué, la liste a été restaurée.");

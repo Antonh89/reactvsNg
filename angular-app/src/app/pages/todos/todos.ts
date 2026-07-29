@@ -2,7 +2,7 @@ import { Dialog } from '@angular/cdk/dialog';
 import { Component, computed, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormField, FormRoot, form, minLength, required } from '@angular/forms/signals';
-import { delay, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { Todo, TodoFilter } from '../../core/todo.model';
 import { TodoService } from '../../core/todo.service';
@@ -27,7 +27,7 @@ export class TodosPage {
   protected readonly actionError = signal<string | null>(null);
 
   protected readonly todosResource = rxResource({
-    stream: () => this.todoService.getTodos().pipe(delay(2_000)),
+    stream: () => this.todoService.getTodos(),
     defaultValue: [] as Todo[],
   });
 
