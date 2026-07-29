@@ -1,0 +1,74 @@
+@use '../../styles/tokens' as *;
+
+.wrapper {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: $space-3;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.box {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-sm;
+  background: $color-surface;
+  transition: background $transition, border-color $transition;
+
+  &::after {
+    width: 5px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+    content: '';
+    opacity: 0;
+    transition: opacity $transition;
+  }
+}
+
+.input:checked + .box {
+  border-color: $color-primary;
+  background: $color-primary;
+
+  &::after {
+    opacity: 1;
+  }
+}
+
+.input:focus-visible + .box {
+  outline: 2px solid $color-primary;
+  outline-offset: 2px;
+}
+
+.input:disabled + .box {
+  opacity: 0.5;
+}
+
+.text {
+  overflow: hidden;
+  color: $color-text;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.textStruck {
+  overflow: hidden;
+  color: $color-muted;
+  text-decoration: line-through;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

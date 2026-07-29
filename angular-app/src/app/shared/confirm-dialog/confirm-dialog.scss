@@ -1,0 +1,28 @@
+@use 'tokens' as *;
+
+.card {
+  width: calc(100vw - #{$space-6});
+  max-width: 420px;
+  padding: $space-5;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  box-shadow: $shadow-lg;
+}
+
+.title {
+  margin-bottom: $space-2;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.description {
+  margin-bottom: $space-5;
+  color: $color-muted;
+  font-size: 0.95rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-2;
+}

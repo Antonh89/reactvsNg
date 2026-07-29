@@ -1,0 +1,56 @@
+<section class="page">
+  <h1 class="title">TodoList</h1>
+  <p class="intro">
+    Chargement via un service <code>HttpClient</code> exposé par <code>rxResource</code>, mutations
+    optimistes sur <code>resource.value</code>, saisie validée par les Signal Forms.
+  </p>
+
+  <form class="form" [formRoot]="addForm">
+    <app-input
+      controlId="new-todo"
+      label="Nouvelle tâche"
+      placeholder="Que faut-il faire ?"
+      [formField]="addForm.title"
+    />
+    <app-button type="submit" [disabled]="addForm().submitting()">
+      {{ addForm().submitting() ? 'Ajout…' : 'Ajouter' }}
+    </app-button>
+  </form>
+
+  <div class="filters" role="group" aria-label="Filtrer par statut">
+    @for (option of filterOptions; track option.value) {
+      <app-button
+        variant="secondary"
+        [active]="filter() === option.value"
+        [ariaPressed]="filter() === option.value"
+        (click)="filter.set(option.value)"
+      >
+        {{ option.label }} ({{ counts()[option.value] }})
+      </app-button>
+    }
+  </div>
+
+  @if (actionError()) {
+    <p class="alert">{{ actionError() }}</p>
+  }
+
+  @if (todosResource.isLoading()) {
+    <p class="state">Chargement des tâches…</p>
+  } @else if (todosResource.error()) {
+    <p class="alert">Impossible de charger les tâches depuis jsonplaceholder.</p>
+  } @else if (visibleTodos().length > 0) {
+    <ul class="list">
+      @for (todo of visibleTodos(); track todo.id) {
+        <li>
+          <app-todo-item
+            [todo]="todo"
+            (toggled)="toggleTodo($event)"
+            (deleteRequested)="requestDeletion($event)"
+          />
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="state">Aucune tâche pour ce filtre.</p>
+  }
+</section>

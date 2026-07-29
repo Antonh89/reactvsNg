@@ -1,0 +1,9 @@
+<div class="card" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+  <h2 class="title" id="confirm-title">{{ data.title }}</h2>
+  <p class="description">{{ data.description }}</p>
+
+  <div class="actions">
+    <app-button variant="secondary" (click)="close(false)">{{ data.cancelLabel }}</app-button>
+    <app-button variant="danger" (click)="close(true)">{{ data.confirmLabel }}</app-button>
+  </div>
+</div>

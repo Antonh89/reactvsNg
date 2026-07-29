@@ -1,0 +1,64 @@
+@use '../../styles/tokens' as *;
+
+.field {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: $space-1;
+  min-width: 0;
+}
+
+.label {
+  color: $color-muted;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.labelHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.input {
+  width: 100%;
+  min-height: 38px;
+  padding: 0 $space-3;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background: $color-surface;
+  color: $color-text;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color $transition, box-shadow $transition;
+
+  &::placeholder {
+    color: rgba($color-muted, 0.7);
+  }
+
+  &:focus {
+    border-color: $color-primary;
+    outline: none;
+    box-shadow: 0 0 0 3px $color-primary-soft;
+  }
+}
+
+.invalid {
+  border-color: $color-danger;
+
+  &:focus {
+    border-color: $color-danger;
+    box-shadow: 0 0 0 3px $color-danger-soft;
+  }
+}
+
+.error {
+  color: $color-danger;
+  font-size: 0.82rem;
+  font-weight: 500;
+}

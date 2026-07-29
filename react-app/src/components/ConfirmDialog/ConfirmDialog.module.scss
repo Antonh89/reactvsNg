@@ -1,0 +1,55 @@
+@use '../../styles/tokens' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(16, 24, 40, 0.5);
+  animation: fade 140ms ease-out;
+}
+
+.content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 41;
+  width: calc(100vw - #{$space-6});
+  max-width: 420px;
+  padding: $space-5;
+  transform: translate(-50%, -50%);
+  border-radius: $radius-lg;
+  background: $color-surface;
+  box-shadow: $shadow-lg;
+  animation: pop 140ms ease-out;
+}
+
+.title {
+  margin-bottom: $space-2;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.description {
+  margin-bottom: $space-5;
+  color: $color-muted;
+  font-size: 0.95rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-2;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: translate(-50%, -48%) scale(0.97);
+    opacity: 0;
+  }
+}

@@ -1,0 +1,15 @@
+<app-checkbox
+  [controlId]="'todo-' + todo().id"
+  [label]="todo().title"
+  [struck]="todo().completed"
+  [checked]="todo().completed"
+  (checkedChange)="toggled.emit(todo())"
+/>
+
+<app-button
+  variant="ghost"
+  [ariaLabel]="'Supprimer « ' + todo().title + ' »'"
+  (click)="deleteRequested.emit(todo())"
+>
+  Supprimer
+</app-button>

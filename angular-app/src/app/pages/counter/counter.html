@@ -1,0 +1,18 @@
+<section class="page">
+  <h1 class="title">Compteur</h1>
+  <p class="intro">
+    État local avec <code>signal()</code>, mis à jour par trois liaisons <code>(click)</code>.
+  </p>
+
+  <div class="card">
+    <output class="value">{{ count() }}</output>
+
+    <div class="actions">
+      <app-button variant="secondary" (click)="decrement()">− Décrémenter</app-button>
+      <app-button variant="ghost" [disabled]="count() === 0" (click)="reset()">
+        Réinitialiser
+      </app-button>
+      <app-button variant="primary" (click)="increment()">+ Incrémenter</app-button>
+    </div>
+  </div>
+</section>

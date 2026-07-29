@@ -1,0 +1,17 @@
+<ng-template #body>
+  <span class="cardTitle">{{ title() }}</span>
+  @if (text()) {
+    <span class="cardText">{{ text() }}</span>
+  }
+  <ng-content />
+</ng-template>
+
+@if (link()) {
+  <a class="card link" [routerLink]="link()">
+    <ng-container [ngTemplateOutlet]="body" />
+  </a>
+} @else {
+  <div class="card">
+    <ng-container [ngTemplateOutlet]="body" />
+  </div>
+}

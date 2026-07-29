@@ -1,0 +1,70 @@
+@use 'tokens' as *;
+
+:host {
+  display: inline-flex;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  min-height: 38px;
+  padding: 0 $space-4;
+  border: 1px solid transparent;
+  border-radius: $radius-md;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background $transition, border-color $transition, color $transition;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &.primary {
+    background: $color-primary;
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background: $color-primary-dark;
+    }
+  }
+
+  &.secondary {
+    background: $color-surface;
+    border-color: $color-border;
+    color: $color-text;
+
+    &:hover:not(:disabled) {
+      border-color: $color-primary;
+      color: $color-primary;
+    }
+
+    &.active {
+      background: $color-primary;
+      border-color: $color-primary;
+      color: #fff;
+    }
+  }
+
+  &.danger {
+    background: $color-danger;
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background: $color-danger-dark;
+    }
+  }
+
+  &.ghost {
+    background: transparent;
+    color: $color-muted;
+
+    &:hover:not(:disabled) {
+      background: $color-danger-soft;
+      color: $color-danger;
+    }
+  }
+}

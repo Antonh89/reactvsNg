@@ -1,0 +1,13 @@
+<label class="wrapper" [for]="controlId()">
+  <input
+    class="input"
+    type="checkbox"
+    [id]="controlId()"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    (change)="onChange($event)"
+    (blur)="touch.emit()"
+  />
+  <span class="box" aria-hidden="true"></span>
+  <span [class]="struck() ? 'textStruck' : 'text'">{{ label() }}</span>
+</label>
