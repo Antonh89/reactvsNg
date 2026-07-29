@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import useSWR from 'swr';
-import useSWRMutation from 'swr/mutation';
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 import {
   TODOS_KEY,
   createTodo,
@@ -9,13 +9,13 @@ import {
   nextLocalId,
   removeTodo,
   toggleTodo,
-} from '../../api/todos';
-import { Button } from '../../components/Button/Button';
-import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog';
-import { Input } from '../../components/Input/Input';
-import type { Todo, TodoFilter } from '../../types';
-import { TodoItem } from './TodoItem';
-import styles from './TodosPage.module.scss';
+} from "../../api/todos";
+import { Button } from "../../components/Button/Button";
+import { ConfirmDialog } from "../../components/ConfirmDialog/ConfirmDialog";
+import { Input } from "../../components/Input/Input";
+import type { Todo, TodoFilter } from "../../types";
+import { TodoItem } from "./TodoItem";
+import styles from "./TodosPage.module.scss";
 
 interface AddTodoForm {
   title: string;
@@ -24,40 +24,45 @@ interface AddTodoForm {
 const MIN_TITLE_LENGTH = 3;
 
 const filterOptions: { value: TodoFilter; label: string }[] = [
-  { value: 'all', label: 'Tous' },
-  { value: 'completed', label: 'Complétés' },
-  { value: 'remaining', label: 'Restants' },
+  { value: "all", label: "Tous" },
+  { value: "completed", label: "Complétés" },
+  { value: "remaining", label: "Restants" },
 ];
 
 function optimisticOptions(project: (todos: Todo[]) => Todo[]) {
   return {
     optimisticData: (current?: Todo[]) => project(current ?? []),
-    populateCache: (_result: unknown, current: Todo[] | undefined) => project(current ?? []),
+    populateCache: (_result: unknown, current: Todo[] | undefined) =>
+      project(current ?? []),
     revalidate: false,
     rollbackOnError: true,
   };
 }
 
 export function TodosPage() {
-  const [filter, setFilter] = useState<TodoFilter>('all');
+  const [filter, setFilter] = useState<TodoFilter>("all");
   const [pendingDeletion, setPendingDeletion] = useState<Todo | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
-  const { data: todos, error, isLoading } = useSWR<Todo[]>(TODOS_KEY, fetchTodos);
+  const {
+    data: todos,
+    error,
+    isLoading,
+  } = useSWR<Todo[]>(TODOS_KEY, fetchTodos);
 
   const { trigger: triggerCreate, isMutating: isCreating } = useSWRMutation(
     TODOS_KEY,
-    (_key: string, { arg }: { arg: string }) => createTodo(arg),
+    (_key: string, { arg }: { arg: string }) => createTodo(arg)
   );
 
   const { trigger: triggerToggle } = useSWRMutation(
     TODOS_KEY,
-    (_key: string, { arg }: { arg: Todo }) => toggleTodo(arg),
+    (_key: string, { arg }: { arg: Todo }) => toggleTodo(arg)
   );
 
   const { trigger: triggerRemove, isMutating: isRemoving } = useSWRMutation(
     TODOS_KEY,
-    (_key: string, { arg }: { arg: Todo }) => removeTodo(arg),
+    (_key: string, { arg }: { arg: Todo }) => removeTodo(arg)
   );
 
   const {
@@ -65,23 +70,27 @@ export function TodosPage() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<AddTodoForm>({ defaultValues: { title: '' } });
+  } = useForm<AddTodoForm>({ defaultValues: { title: "" } });
 
   const counts = useMemo(() => {
     const list = todos ?? [];
     const completed = list.filter((todo) => todo.completed).length;
 
-    return { all: list.length, completed, remaining: list.length - completed };
+    return {
+      all: list.length,
+      completed,
+      remaining: list.length - completed,
+    };
   }, [todos]);
 
   const visibleTodos = useMemo(() => {
     const list = todos ?? [];
 
-    if (filter === 'completed') {
+    if (filter === "completed") {
       return list.filter((todo) => todo.completed);
     }
 
-    if (filter === 'remaining') {
+    if (filter === "remaining") {
       return list.filter((todo) => !todo.completed);
     }
 
@@ -102,7 +111,7 @@ export function TodosPage() {
     try {
       await triggerCreate<Todo[]>(
         trimmed,
-        optimisticOptions((current) => [optimistic, ...current]),
+        optimisticOptions((current) => [optimistic, ...current])
       );
       reset();
     } catch {
@@ -117,11 +126,13 @@ export function TodosPage() {
       await triggerToggle<Todo[]>(
         todo,
         optimisticOptions((current) =>
-          current.map((item) => (item.id === todo.id ? { ...item, completed: !item.completed } : item)),
-        ),
+          current.map((item) =>
+            item.id === todo.id ? { ...item, completed: !item.completed } : item
+          )
+        )
       );
     } catch {
-      setActionError('La mise à jour a échoué, la liste a été restaurée.');
+      setActionError("La mise à jour a échoué, la liste a été restaurée.");
     }
   }
 
@@ -130,17 +141,18 @@ export function TodosPage() {
       return;
     }
 
-    const target = pendingDeletion;
     setActionError(null);
 
     try {
       await triggerRemove<Todo[]>(
-        target,
-        optimisticOptions((current) => current.filter((item) => item.id !== target.id)),
+        pendingDeletion,
+        optimisticOptions((current) =>
+          current.filter((item) => item.id !== pendingDeletion.id)
+        )
       );
       setPendingDeletion(null);
     } catch {
-      setActionError('La suppression a échoué, la liste a été restaurée.');
+      setActionError("La suppression a échoué, la liste a été restaurée.");
       setPendingDeletion(null);
     }
   }
@@ -149,8 +161,8 @@ export function TodosPage() {
     <section className={styles.page}>
       <h1 className={styles.title}>TodoList</h1>
       <p className={styles.intro}>
-        Chargement via SWR, mutations optimistes via <code>useSWRMutation</code>, saisie validée par
-        react-hook-form.
+        Chargement via SWR, mutations optimistes via <code>useSWRMutation</code>
+        , saisie validée par react-hook-form.
       </p>
 
       <form className={styles.form} onSubmit={onSubmit} noValidate>
@@ -159,8 +171,8 @@ export function TodosPage() {
           placeholder="Que faut-il faire ?"
           autoComplete="off"
           error={errors.title?.message}
-          {...register('title', {
-            required: 'Le titre est obligatoire.',
+          {...register("title", {
+            required: "Le titre est obligatoire.",
             minLength: {
               value: MIN_TITLE_LENGTH,
               message: `Le titre doit contenir au moins ${MIN_TITLE_LENGTH} caractères.`,
@@ -168,11 +180,15 @@ export function TodosPage() {
           })}
         />
         <Button type="submit" disabled={isCreating}>
-          {isCreating ? 'Ajout…' : 'Ajouter'}
+          {isCreating ? "Ajout…" : "Ajouter"}
         </Button>
       </form>
 
-      <div className={styles.filters} role="group" aria-label="Filtrer par statut">
+      <div
+        className={styles.filters}
+        role="group"
+        aria-label="Filtrer par statut"
+      >
         {filterOptions.map((option) => (
           <Button
             key={option.value}
@@ -188,10 +204,14 @@ export function TodosPage() {
 
       {actionError ? <p className={styles.alert}>{actionError}</p> : null}
 
-      {isLoading ? <p className={styles.state}>Chargement des tâches…</p> : null}
+      {isLoading ? (
+        <p className={styles.state}>Chargement des tâches…</p>
+      ) : null}
 
       {error ? (
-        <p className={styles.alert}>Impossible de charger les tâches depuis jsonplaceholder.</p>
+        <p className={styles.alert}>
+          Impossible de charger les tâches depuis jsonplaceholder.
+        </p>
       ) : null}
 
       {!isLoading && !error ? (
@@ -217,7 +237,7 @@ export function TodosPage() {
         description={
           pendingDeletion
             ? `« ${pendingDeletion.title} » sera retirée de la liste. Cette action est définitive.`
-            : ''
+            : ""
         }
         confirmLabel="Supprimer"
         pending={isRemoving}
