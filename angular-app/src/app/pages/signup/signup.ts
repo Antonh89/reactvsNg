@@ -113,7 +113,6 @@ export class SignupPage {
     await new Promise((resolve) => setTimeout(resolve, SUBMIT_DELAY));
 
     this.createdNickname.set(nickname);
-    this.newAccount.set(EMPTY_ACCOUNT);
-    this.signupForm().reset();
+    this.signupForm().reset(EMPTY_ACCOUNT);
   }
 }
