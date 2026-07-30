@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldPath } from "react-hook-form";
 import { Button } from "../../components/Button/Button";
 import { Input } from "../../components/Input/Input";
 import styles from "./SignupPage.module.scss";
@@ -27,6 +27,48 @@ function createAccount(account: SignupFormInput): Promise<string> {
   );
 }
 
+function useSignupForm() {
+  const { register: registerRHF, ...form } = useForm<
+    SignupFormInput,
+    unknown,
+    SignupFormOutput
+  >({
+    resolver: zodResolver(signupSchema),
+    mode: "onChange",
+    defaultValues: emptyForm,
+  });
+
+  /**
+   * `mode: "onChange"` ne remonte que l'erreur du champ modifié : chaque champ déclare
+   * `contact` en dépendance pour que l'alerte globale soit revalidée à chaque frappe.
+   */
+  const register: typeof registerRHF = (name, options) => {
+    let deps: FieldPath<SignupFormInput> | FieldPath<SignupFormInput>[] = [
+      CONTACT_PATH,
+    ];
+
+    if (!options) {
+      return registerRHF(name, { deps });
+    }
+
+    if (options.deps) {
+      deps = Array.isArray(options.deps)
+        ? [...options.deps, ...deps]
+        : [options.deps, ...deps];
+    }
+
+    return registerRHF(name, {
+      ...options,
+      deps,
+    });
+  };
+
+  return {
+    ...form,
+    register,
+  };
+}
+
 export function SignupPage() {
   const [createdNickname, setCreatedNickname] = useState<string | null>(null);
 
@@ -35,11 +77,7 @@ export function SignupPage() {
     handleSubmit,
     reset,
     formState: { errors, isValid, isSubmitting },
-  } = useForm<SignupFormInput, unknown, SignupFormOutput>({
-    resolver: zodResolver(signupSchema),
-    mode: "onChange",
-    defaultValues: emptyForm,
-  });
+  } = useSignupForm();
 
   const onSubmit = handleSubmit(async (account) => {
     setCreatedNickname(null);
@@ -62,10 +100,6 @@ export function SignupPage() {
         </p>
       ) : null}
 
-      {/*
-        `mode: "onChange"` ne remonte que l'erreur du champ modifié : chaque champ déclare
-        `contact` en dépendance pour que l'alerte globale soit revalidée à chaque frappe.
-      */}
       <form className={styles.form} onSubmit={onSubmit} noValidate>
         <Input
           label="Adresse email"
@@ -73,7 +107,8 @@ export function SignupPage() {
           placeholder="prenom.nom@exemple.fr"
           autoComplete="off"
           error={errors.email?.message}
-          {...register("email", { deps: [CONTACT_PATH] })}
+          // {...register("email", { deps: [CONTACT_PATH] })}
+          {...register("email")}
         />
 
         <Input
@@ -82,7 +117,8 @@ export function SignupPage() {
           placeholder="06 12 34 56 78"
           autoComplete="off"
           error={errors.phone?.message}
-          {...register("phone", { deps: [CONTACT_PATH] })}
+          // {...register("phone", { deps: [CONTACT_PATH] })}
+          {...register("phone")}
         />
 
         <Input
@@ -90,7 +126,8 @@ export function SignupPage() {
           placeholder="Comment doit-on vous appeler ?"
           autoComplete="off"
           error={errors.nickname?.message}
-          {...register("nickname", { deps: [CONTACT_PATH] })}
+          //         {...register("nickname", { deps: [CONTACT_PATH] })}
+          {...register("nickname")}
         />
 
         <Input
@@ -98,9 +135,10 @@ export function SignupPage() {
           type="password"
           autoComplete="off"
           error={errors.password?.message}
-          {...register("password", {
-            deps: ["confirmPassword", CONTACT_PATH],
-          })}
+          // {...register("password", {
+          //   deps: ["confirmPassword", CONTACT_PATH],
+          // })}
+          {...register("password", { deps: ["confirmPassword"] })}
         />
 
         <Input
@@ -108,7 +146,8 @@ export function SignupPage() {
           type="password"
           autoComplete="off"
           error={errors.confirmPassword?.message}
-          {...register("confirmPassword", { deps: [CONTACT_PATH] })}
+          // {...register("confirmPassword", { deps: [CONTACT_PATH] })}
+          {...register("confirmPassword")}
         />
 
         {errors.contact?.message ? (
