@@ -5,11 +5,6 @@
   align-items: center;
   gap: $space-3;
   padding: $space-3 $space-4;
-  border-bottom: 1px solid $color-border;
-
-  &:last-child {
-    border-bottom: none;
-  }
 
   &:hover {
     background: rgba($color-bg, 0.7);

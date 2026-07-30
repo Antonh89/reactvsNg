@@ -21,7 +21,7 @@
         aria-describedby="signup-email-error"
         [formField]="signupForm.email"
       />
-      <span id="signup-email-error" [appFieldError]="signupForm.email"></span>
+      <app-field-error id="signup-email-error" [field]="signupForm.email" />
     </div>
 
     <div class="app-field">
@@ -34,7 +34,7 @@
         aria-describedby="signup-phone-error"
         [formField]="signupForm.phone"
       />
-      <span id="signup-phone-error" [appFieldError]="signupForm.phone"></span>
+      <app-field-error id="signup-phone-error" [field]="signupForm.phone" />
     </div>
 
     <div class="app-field">
@@ -46,7 +46,7 @@
         aria-describedby="signup-nickname-error"
         [formField]="signupForm.nickname"
       />
-      <span id="signup-nickname-error" [appFieldError]="signupForm.nickname"></span>
+      <app-field-error id="signup-nickname-error" [field]="signupForm.nickname" />
     </div>
 
     <div class="app-field">
@@ -58,7 +58,7 @@
         aria-describedby="signup-password-error"
         [formField]="signupForm.password"
       />
-      <span id="signup-password-error" [appFieldError]="signupForm.password"></span>
+      <app-field-error id="signup-password-error" [field]="signupForm.password" />
     </div>
 
     <div class="app-field">
@@ -70,7 +70,7 @@
         aria-describedby="signup-confirm-error"
         [formField]="signupForm.confirmPassword"
       />
-      <span id="signup-confirm-error" [appFieldError]="signupForm.confirmPassword"></span>
+      <app-field-error id="signup-confirm-error" [field]="signupForm.confirmPassword" />
     </div>
 
     @if (contactError()) {

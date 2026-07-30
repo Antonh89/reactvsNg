@@ -15,7 +15,7 @@
         aria-describedby="new-todo-error"
         [formField]="addForm.title"
       />
-      <span id="new-todo-error" [appFieldError]="addForm.title"></span>
+      <app-field-error id="new-todo-error" [field]="addForm.title" />
     </div>
 
     <button appButton type="submit" [disabled]="addForm().submitting()">

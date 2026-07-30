@@ -1,17 +1,17 @@
-import { Directive, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { Field } from '@angular/forms/signals';
 
-@Directive({
-  selector: '[appFieldError]',
+@Component({
+  selector: 'app-field-error',
+  template: '{{ message() }}',
+  styleUrl: './field-error.scss',
   host: {
-    class: 'app-field__error',
     role: 'alert',
     '[hidden]': '!message()',
-    '[textContent]': 'message()',
   },
 })
 export class AppFieldError<TValue> {
-  readonly field = input.required<Field<TValue>>({ alias: 'appFieldError' });
+  readonly field = input.required<Field<TValue>>();
 
   protected readonly message = computed(() => {
     const state = this.field()();

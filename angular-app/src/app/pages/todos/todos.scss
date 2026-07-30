@@ -58,6 +58,10 @@
   box-shadow: $shadow-sm;
   list-style: none;
   overflow: hidden;
+
+  & > *:not(:last-child) {
+    border-bottom: 1px solid $color-border;
+  }
 }
 
 .state {
