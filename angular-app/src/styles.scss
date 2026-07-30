@@ -1,5 +1,11 @@
 @use 'tokens' as *;
 
+// Les contrôles partagés sont des directives : leurs styles ne peuvent plus être
+// encapsulés par un composant, ils vivent donc dans la feuille globale.
+@use 'app/shared/button/button';
+@use 'app/shared/checkbox/checkbox';
+@use 'app/shared/input/input';
+
 *,
 *::before,
 *::after {

@@ -1,0 +1,44 @@
+@use 'tokens' as *;
+
+.app-checkbox {
+  display: inline-grid;
+  flex: none;
+  place-content: center;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-sm;
+  background: $color-surface;
+  appearance: none;
+  cursor: pointer;
+  transition:
+    background $transition,
+    border-color $transition;
+
+  &::after {
+    width: 5px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+    content: '';
+    opacity: 0;
+    transition: opacity $transition;
+  }
+
+  &:checked {
+    border-color: $color-primary;
+    background: $color-primary;
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

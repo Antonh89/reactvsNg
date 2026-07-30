@@ -35,6 +35,14 @@
   }
 }
 
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;

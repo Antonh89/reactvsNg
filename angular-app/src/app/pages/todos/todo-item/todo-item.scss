@@ -15,3 +15,24 @@
     background: rgba($color-bg, 0.7);
   }
 }
+
+.toggle {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: $space-3;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.label {
+  overflow: hidden;
+  color: $color-text;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+input:checked + .label {
+  color: $color-muted;
+  text-decoration: line-through;
+}

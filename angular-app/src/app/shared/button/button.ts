@@ -1,17 +1,24 @@
-import { Component, input } from '@angular/core';
+import { Directive, computed, input } from '@angular/core';
 
-type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
+export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
 
-@Component({
-  selector: 'app-button',
-  templateUrl: './button.html',
-  styleUrl: './button.scss',
+@Directive({
+  selector: 'button[appButton]',
+  host: {
+    '[class]': 'hostClasses()',
+  },
 })
 export class AppButton {
   readonly variant = input<ButtonVariant>('primary');
-  readonly type = input<'button' | 'submit'>('button');
-  readonly disabled = input(false);
   readonly active = input(false);
-  readonly ariaLabel = input<string | null>(null);
-  readonly ariaPressed = input<boolean | null>(null);
+
+  protected readonly hostClasses = computed(() => {
+    const classes = ['app-button', `app-button--${this.variant()}`];
+
+    if (this.active()) {
+      classes.push('app-button--active');
+    }
+
+    return classes.join(' ');
+  });
 }

@@ -32,9 +32,13 @@ export function TodosPage() {
     create,
     toggle,
     remove,
+    refresh,
     isCreating,
     isRemoving,
+    isRefreshing,
   } = useApiTodos();
+
+  const isReadonly = isCreating || isLoading || isRefreshing;
 
   const {
     register,
@@ -89,6 +93,16 @@ export function TodosPage() {
     }
   }
 
+  async function handleRefresh() {
+    setActionError(null);
+
+    try {
+      await refresh();
+    } catch {
+      setActionError("Le rafraîchissement a échoué.");
+    }
+  }
+
   async function confirmDeletion() {
     if (!pendingDeletion) {
       return;
@@ -127,27 +141,37 @@ export function TodosPage() {
             },
           })}
         />
-        <Button type="submit" disabled={isCreating}>
+        <Button type="submit" disabled={isReadonly}>
           {isCreating ? "Ajout…" : "Ajouter"}
         </Button>
       </form>
 
-      <div
-        className={styles.filters}
-        role="group"
-        aria-label="Filtrer par statut"
-      >
-        {filterOptions.map((option) => (
-          <Button
-            key={option.value}
-            variant="secondary"
-            active={filter === option.value}
-            aria-pressed={filter === option.value}
-            onClick={() => setFilter(option.value)}
-          >
-            {option.label} ({counts[option.value]})
-          </Button>
-        ))}
+      <div className={styles.toolbar}>
+        <div
+          className={styles.filters}
+          role="group"
+          aria-label="Filtrer par statut"
+        >
+          {filterOptions.map((option) => (
+            <Button
+              key={option.value}
+              variant="secondary"
+              active={filter === option.value}
+              aria-pressed={filter === option.value}
+              onClick={() => setFilter(option.value)}
+            >
+              {option.label} ({counts[option.value]})
+            </Button>
+          ))}
+        </div>
+
+        <Button
+          variant="secondary"
+          disabled={isReadonly}
+          onClick={handleRefresh}
+        >
+          {isRefreshing ? "Rafraîchissement…" : "Rafraîchir"}
+        </Button>
       </div>
 
       {actionError ? <p className={styles.alert}>{actionError}</p> : null}

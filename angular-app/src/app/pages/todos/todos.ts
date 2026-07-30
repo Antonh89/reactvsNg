@@ -8,6 +8,7 @@ import { Todo, TodoFilter } from '../../core/todo.model';
 import { TodoService } from '../../core/todo.service';
 import { AppButton } from '../../shared/button/button';
 import { AppConfirmDialog, ConfirmDialogData } from '../../shared/confirm-dialog/confirm-dialog';
+import { AppFieldError } from '../../shared/input/field-error';
 import { AppInput } from '../../shared/input/input';
 import { TodoItem } from './todo-item/todo-item';
 
@@ -15,7 +16,7 @@ const MIN_TITLE_LENGTH = 3;
 
 @Component({
   selector: 'app-todos',
-  imports: [AppButton, AppInput, FormField, FormRoot, TodoItem],
+  imports: [AppButton, AppFieldError, AppInput, FormField, FormRoot, TodoItem],
   templateUrl: './todos.html',
   styleUrl: './todos.scss',
 })
@@ -56,6 +57,10 @@ export class TodosPage {
     { value: 'remaining', label: 'Restants' },
   ];
 
+  protected readonly isInitialLoading = computed(() => this.todosResource.status() === 'loading');
+
+  protected readonly isRefreshing = computed(() => this.todosResource.status() === 'reloading');
+
   protected readonly counts = computed(() => {
     const todos = this.todosResource.value();
     const completed = todos.filter((todo) => todo.completed).length;
@@ -77,6 +82,11 @@ export class TodosPage {
 
     return todos;
   });
+
+  protected refreshTodos(): void {
+    this.actionError.set(null);
+    this.todosResource.reload();
+  }
 
   protected async toggleTodo(todo: Todo): Promise<void> {
     const snapshot = this.todosResource.value();

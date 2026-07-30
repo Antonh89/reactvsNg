@@ -8,11 +8,13 @@
     <output class="value">{{ count() }}</output>
 
     <div class="actions">
-      <app-button variant="secondary" (click)="decrement()">− Décrémenter</app-button>
-      <app-button variant="ghost" [disabled]="count() === 0" (click)="reset()">
+      <button appButton type="button" variant="secondary" (click)="decrement()">
+        − Décrémenter
+      </button>
+      <button appButton type="button" variant="ghost" [disabled]="count() === 0" (click)="reset()">
         Réinitialiser
-      </app-button>
-      <app-button variant="primary" (click)="increment()">+ Incrémenter</app-button>
+      </button>
+      <button appButton type="button" (click)="increment()">+ Incrémenter</button>
     </div>
   </div>
 </section>

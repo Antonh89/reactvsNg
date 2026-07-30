@@ -30,9 +30,17 @@
   gap: $space-2;
   margin-top: $space-2;
 
-  app-button {
+  .app-button {
     margin-top: 22px;
   }
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
 }
 
 .filters {

@@ -1,4 +1,4 @@
-@use '../../styles/tokens' as *;
+@use "../../styles/tokens" as *;
 
 .shell {
   display: flex;
@@ -50,7 +50,6 @@
 }
 
 .linkActive {
-  composes: link;
   background: $color-primary-soft;
   color: $color-primary;
 }

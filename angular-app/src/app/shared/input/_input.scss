@@ -1,12 +1,6 @@
 @use 'tokens' as *;
 
-:host {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-}
-
-.field {
+.app-field {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -14,7 +8,7 @@
   min-width: 0;
 }
 
-.label {
+.app-field__label {
   color: $color-muted;
   font-size: 0.82rem;
   font-weight: 600;
@@ -22,16 +16,13 @@
   text-transform: uppercase;
 }
 
-.labelHidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+.app-field__error {
+  color: $color-danger;
+  font-size: 0.82rem;
+  font-weight: 500;
 }
 
-.input {
+.app-input {
   width: 100%;
   min-height: 38px;
   padding: 0 $space-3;
@@ -41,7 +32,9 @@
   color: $color-text;
   font-family: inherit;
   font-size: 0.95rem;
-  transition: border-color $transition, box-shadow $transition;
+  transition:
+    border-color $transition,
+    box-shadow $transition;
 
   &::placeholder {
     color: rgba($color-muted, 0.7);
@@ -52,19 +45,13 @@
     outline: none;
     box-shadow: 0 0 0 3px $color-primary-soft;
   }
-
-  &.invalid {
-    border-color: $color-danger;
-
-    &:focus {
-      border-color: $color-danger;
-      box-shadow: 0 0 0 3px $color-danger-soft;
-    }
-  }
 }
 
-.error {
-  color: $color-danger;
-  font-size: 0.82rem;
-  font-weight: 500;
+.app-input--invalid {
+  border-color: $color-danger;
+
+  &:focus {
+    border-color: $color-danger;
+    box-shadow: 0 0 0 3px $color-danger-soft;
+  }
 }

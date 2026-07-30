@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { NavLink, Outlet } from "react-router-dom";
 import styles from "./Layout.module.scss";
 
@@ -20,7 +21,7 @@ export function Layout() {
                 to={to}
                 end={end}
                 className={({ isActive }) =>
-                  isActive ? styles.linkActive : styles.link
+                  clsx(styles.link, isActive && styles.linkActive)
                 }
               >
                 {label}

@@ -26,7 +26,15 @@ export function useApiTodos() {
     data: todos,
     error,
     isLoading,
-  } = useSWR<Todo[]>(TODOS_KEY, fetchTodos);
+    isValidating,
+    mutate: refresh,
+  } = useSWR<Todo[]>(TODOS_KEY, fetchTodos, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
+
+  const isRefreshing = isValidating && !isLoading;
 
   const { trigger: triggerCreate, isMutating: isCreating } = useSWRMutation(
     TODOS_KEY,
@@ -91,6 +99,8 @@ export function useApiTodos() {
     create,
     toggle,
     remove,
+    refresh,
+    isRefreshing,
     isCreating,
     isToggling,
     isRemoving,

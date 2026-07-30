@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Card.module.scss";
@@ -26,20 +27,12 @@ export function Card({
   );
 
   if (to) {
-    const classNames = [styles.card, styles.link, className]
-      .filter(Boolean)
-      .join(" ");
-
     return (
-      <Link to={to} className={classNames}>
+      <Link to={to} className={clsx(styles.card, styles.link, className)}>
         {body}
       </Link>
     );
   }
 
-  return (
-    <div className={[styles.card, className].filter(Boolean).join(" ")}>
-      {body}
-    </div>
-  );
+  return <div className={clsx(styles.card, className)}>{body}</div>;
 }

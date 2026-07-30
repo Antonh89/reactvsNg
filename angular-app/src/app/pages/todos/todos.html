@@ -6,35 +6,55 @@
   </p>
 
   <form class="form" [formRoot]="addForm">
-    <app-input
-      controlId="new-todo"
-      label="Nouvelle tâche"
-      placeholder="Que faut-il faire ?"
-      [formField]="addForm.title"
-    />
-    <app-button type="submit" [disabled]="addForm().submitting()">
+    <div class="app-field">
+      <label class="app-field__label" for="new-todo">Nouvelle tâche</label>
+      <input
+        appInput
+        id="new-todo"
+        placeholder="Que faut-il faire ?"
+        aria-describedby="new-todo-error"
+        [formField]="addForm.title"
+      />
+      <span id="new-todo-error" [appFieldError]="addForm.title"></span>
+    </div>
+
+    <button appButton type="submit" [disabled]="addForm().submitting()">
       {{ addForm().submitting() ? 'Ajout…' : 'Ajouter' }}
-    </app-button>
+    </button>
   </form>
 
-  <div class="filters" role="group" aria-label="Filtrer par statut">
-    @for (option of filterOptions; track option.value) {
-      <app-button
-        variant="secondary"
-        [active]="filter() === option.value"
-        [ariaPressed]="filter() === option.value"
-        (click)="filter.set(option.value)"
-      >
-        {{ option.label }} ({{ counts()[option.value] }})
-      </app-button>
-    }
+  <div class="toolbar">
+    <div class="filters" role="group" aria-label="Filtrer par statut">
+      @for (option of filterOptions; track option.value) {
+        <button
+          appButton
+          type="button"
+          variant="secondary"
+          [active]="filter() === option.value"
+          [attr.aria-pressed]="filter() === option.value"
+          (click)="filter.set(option.value)"
+        >
+          {{ option.label }} ({{ counts()[option.value] }})
+        </button>
+      }
+    </div>
+
+    <button
+      appButton
+      type="button"
+      variant="secondary"
+      [disabled]="todosResource.isLoading()"
+      (click)="refreshTodos()"
+    >
+      {{ isRefreshing() ? 'Rafraîchissement…' : 'Rafraîchir' }}
+    </button>
   </div>
 
   @if (actionError()) {
     <p class="alert">{{ actionError() }}</p>
   }
 
-  @if (todosResource.isLoading()) {
+  @if (isInitialLoading()) {
     <p class="state">Chargement des tâches…</p>
   } @else if (todosResource.error()) {
     <p class="alert">Impossible de charger les tâches depuis jsonplaceholder.</p>

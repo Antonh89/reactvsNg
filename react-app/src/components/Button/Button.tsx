@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import styles from "./Button.module.scss";
 
@@ -17,17 +18,17 @@ export function Button({
   children,
   ...rest
 }: Readonly<ButtonProps>) {
-  const classNames = [
-    styles.button,
-    styles[variant],
-    active ? styles.active : null,
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   return (
-    <button type={type} className={classNames} {...rest}>
+    <button
+      type={type}
+      className={clsx(
+        styles.button,
+        styles[variant],
+        active && styles.active,
+        className,
+      )}
+      {...rest}
+    >
       {children}
     </button>
   );

@@ -1,27 +1,21 @@
-import { Component, computed, input, model, output } from '@angular/core';
-import { FormValueControl, ValidationError } from '@angular/forms/signals';
+import { Directive, computed, inject } from '@angular/core';
+import { FORM_FIELD } from '@angular/forms/signals';
 
-@Component({
-  selector: 'app-input',
-  templateUrl: './input.html',
-  styleUrl: './input.scss',
+@Directive({
+  selector: 'input[appInput]',
+  host: {
+    class: 'app-input',
+    autocomplete: 'off',
+    '[class.app-input--invalid]': 'showError()',
+    '[attr.aria-invalid]': 'showError() || null',
+  },
 })
-export class AppInput implements FormValueControl<string> {
-  readonly value = model('');
-  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
-  readonly touched = input(false);
-  readonly disabled = input(false);
-  readonly touch = output<void>();
+export class AppInput {
+  private readonly formField = inject(FORM_FIELD, { optional: true, self: true });
 
-  readonly label = input.required<string>();
-  readonly placeholder = input('');
-  readonly controlId = input('app-input');
-  readonly hideLabel = input(false);
+  protected readonly showError = computed(() => {
+    const state = this.formField?.state();
 
-  protected readonly showError = computed(() => this.touched() && this.errors().length > 0);
-  protected readonly errorMessage = computed(() => this.errors()[0]?.message ?? 'Valeur invalide.');
-
-  protected onInput(event: Event): void {
-    this.value.set((event.target as HTMLInputElement).value);
-  }
+    return state ? state.touched() && state.invalid() : false;
+  });
 }

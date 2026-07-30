@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { InputHTMLAttributes, Ref } from "react";
 import styles from "./Input.module.scss";
 
@@ -23,7 +24,7 @@ export function Input({
   return (
     <div className={styles.field}>
       <label
-        className={hideLabel ? styles.labelHidden : styles.label}
+        className={clsx(styles.label, hideLabel && styles.labelHidden)}
         htmlFor={inputId}
       >
         {label}
@@ -32,9 +33,7 @@ export function Input({
         {...rest}
         id={inputId}
         ref={ref}
-        className={[styles.input, error ? styles.invalid : null, className]
-          .filter(Boolean)
-          .join(" ")}
+        className={clsx(styles.input, error && styles.invalid, className)}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
       />

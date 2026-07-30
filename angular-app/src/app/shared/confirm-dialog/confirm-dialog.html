@@ -3,7 +3,11 @@
   <p class="description">{{ data.description }}</p>
 
   <div class="actions">
-    <app-button variant="secondary" (click)="close(false)">{{ data.cancelLabel }}</app-button>
-    <app-button variant="danger" (click)="close(true)">{{ data.confirmLabel }}</app-button>
+    <button appButton type="button" variant="secondary" (click)="close(false)">
+      {{ data.cancelLabel }}
+    </button>
+    <button appButton type="button" variant="danger" (click)="close(true)">
+      {{ data.confirmLabel }}
+    </button>
   </div>
 </div>
