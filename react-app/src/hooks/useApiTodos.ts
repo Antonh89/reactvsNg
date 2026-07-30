@@ -33,16 +33,6 @@ export function useApiTodos() {
     (_key: string, { arg }: { arg: string }) => createTodo(arg)
   );
 
-  const { trigger: triggerToggle, isMutating: isToggling } = useSWRMutation(
-    TODOS_KEY,
-    (_key: string, { arg }: { arg: Todo }) => toggleTodo(arg)
-  );
-
-  const { trigger: triggerRemove, isMutating: isRemoving } = useSWRMutation(
-    TODOS_KEY,
-    (_key: string, { arg }: { arg: Todo }) => removeTodo(arg)
-  );
-
   const create = useCallback(
     (title: string) => {
       const optimistic: Todo = {
@@ -60,6 +50,11 @@ export function useApiTodos() {
     [todos, triggerCreate]
   );
 
+  const { trigger: triggerToggle, isMutating: isToggling } = useSWRMutation(
+    TODOS_KEY,
+    (_key: string, { arg }: { arg: Todo }) => toggleTodo(arg)
+  );
+
   const toggle = useCallback(
     (todo: Todo) =>
       triggerToggle<Todo[]>(
@@ -71,6 +66,11 @@ export function useApiTodos() {
         )
       ),
     [triggerToggle]
+  );
+
+  const { trigger: triggerRemove, isMutating: isRemoving } = useSWRMutation(
+    TODOS_KEY,
+    (_key: string, { arg }: { arg: Todo }) => removeTodo(arg)
   );
 
   const remove = useCallback(
