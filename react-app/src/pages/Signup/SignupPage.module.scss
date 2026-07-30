@@ -1,0 +1,60 @@
+@use '../../styles/tokens' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.intro {
+  color: $color-muted;
+
+  code {
+    padding: 1px 5px;
+    border-radius: $radius-sm;
+    background: $color-primary-soft;
+    color: $color-primary-dark;
+    font-size: 0.88em;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: $space-4;
+  margin-top: $space-2;
+  padding: $space-5;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  box-shadow: $shadow-sm;
+
+  button {
+    align-self: flex-start;
+  }
+}
+
+.alert {
+  padding: $space-3 $space-4;
+  border: 1px solid rgba($color-danger, 0.3);
+  border-radius: $radius-md;
+  background: $color-danger-soft;
+  color: $color-danger-dark;
+  font-size: 0.92rem;
+}
+
+.success {
+  padding: $space-3 $space-4;
+  border: 1px solid rgba($color-success, 0.3);
+  border-radius: $radius-md;
+  background: rgba($color-success, 0.08);
+  color: $color-success;
+  font-size: 0.92rem;
+}

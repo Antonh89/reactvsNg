@@ -8,6 +8,11 @@ const cards = [
     text: "useState et gestion d’événements onClick : incrémenter, décrémenter, réinitialiser.",
   },
   {
+    to: "/signup",
+    title: "Inscription",
+    text: "Formulaire validé par un schéma Zod branché sur react-hook-form : format email, téléphone français, mots de passe identiques.",
+  },
+  {
     to: "/todos",
     title: "TodoList",
     text: "SWR pour le chargement et les mutations, react-hook-form pour la saisie, Radix UI pour la modale.",

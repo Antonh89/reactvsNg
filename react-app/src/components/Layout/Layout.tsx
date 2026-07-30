@@ -5,6 +5,7 @@ import styles from "./Layout.module.scss";
 const links = [
   { to: "/", label: "Accueil", end: true },
   { to: "/counter", label: "Compteur", end: false },
+  { to: "/signup", label: "Inscription", end: false },
   { to: "/todos", label: "TodoList", end: false },
 ];
 

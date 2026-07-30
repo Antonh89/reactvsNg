@@ -1,0 +1,84 @@
+<section class="page">
+  <h1 class="title">Inscription</h1>
+  <p class="intro">
+    Signal Forms et validateurs natifs (<code>required</code>, <code>email</code>,
+    <code>pattern</code>) plus deux règles inter-champs écrites avec <code>validate</code> : le
+    bouton n'est actif que si le formulaire est valide.
+  </p>
+
+  @if (createdNickname()) {
+    <p class="success">Bienvenue {{ createdNickname() }} ! Le compte a été créé.</p>
+  }
+
+  <form class="form" [formRoot]="signupForm">
+    <div class="app-field">
+      <label class="app-field__label" for="signup-email">Adresse email</label>
+      <input
+        appInput
+        id="signup-email"
+        type="email"
+        placeholder="prenom.nom@exemple.fr"
+        aria-describedby="signup-email-error"
+        [formField]="signupForm.email"
+      />
+      <span id="signup-email-error" [appFieldError]="signupForm.email"></span>
+    </div>
+
+    <div class="app-field">
+      <label class="app-field__label" for="signup-phone">Numéro de téléphone (optionnel)</label>
+      <input
+        appInput
+        id="signup-phone"
+        type="tel"
+        placeholder="06 12 34 56 78"
+        aria-describedby="signup-phone-error"
+        [formField]="signupForm.phone"
+      />
+      <span id="signup-phone-error" [appFieldError]="signupForm.phone"></span>
+    </div>
+
+    <div class="app-field">
+      <label class="app-field__label" for="signup-nickname">Pseudonyme</label>
+      <input
+        appInput
+        id="signup-nickname"
+        placeholder="Comment doit-on vous appeler ?"
+        aria-describedby="signup-nickname-error"
+        [formField]="signupForm.nickname"
+      />
+      <span id="signup-nickname-error" [appFieldError]="signupForm.nickname"></span>
+    </div>
+
+    <div class="app-field">
+      <label class="app-field__label" for="signup-password">Mot de passe</label>
+      <input
+        appInput
+        id="signup-password"
+        type="password"
+        aria-describedby="signup-password-error"
+        [formField]="signupForm.password"
+      />
+      <span id="signup-password-error" [appFieldError]="signupForm.password"></span>
+    </div>
+
+    <div class="app-field">
+      <label class="app-field__label" for="signup-confirm">Confirmer le mot de passe</label>
+      <input
+        appInput
+        id="signup-confirm"
+        type="password"
+        aria-describedby="signup-confirm-error"
+        [formField]="signupForm.confirmPassword"
+      />
+      <span id="signup-confirm-error" [appFieldError]="signupForm.confirmPassword"></span>
+    </div>
+
+    @if (contactError()) {
+      <p class="alert">{{ contactError() }}</p>
+    }
+
+    <button appButton type="submit" [disabled]="!signupForm().valid() || signupForm().submitting()">
+      {{ signupForm().submitting() ? 'Création…' : 'Valider' }}
+    </button>
+  </form>
+</section>

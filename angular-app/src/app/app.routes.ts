@@ -16,6 +16,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/counter/counter').then((m) => m.CounterPage),
       },
       {
+        path: 'signup',
+        loadComponent: () => import('./pages/signup/signup').then((m) => m.SignupPage),
+      },
+      {
         path: 'todos',
         loadComponent: () => import('./pages/todos/todos').then((m) => m.TodosPage),
       },

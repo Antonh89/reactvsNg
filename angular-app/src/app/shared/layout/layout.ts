@@ -11,6 +11,7 @@ export class AppLayout {
   protected readonly links = [
     { path: '/', label: 'Accueil', exact: true },
     { path: '/counter', label: 'Compteur', exact: false },
+    { path: '/signup', label: 'Inscription', exact: false },
     { path: '/todos', label: 'TodoList', exact: false },
   ];
 }

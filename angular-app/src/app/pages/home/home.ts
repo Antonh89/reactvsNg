@@ -15,6 +15,11 @@ export class HomePage {
       text: 'signal() et liaison (click) : incrémenter, décrémenter, réinitialiser.',
     },
     {
+      path: '/signup',
+      title: 'Inscription',
+      text: 'Formulaire validé par les Signal Forms natives : format email, téléphone français, mots de passe identiques.',
+    },
+    {
       path: '/todos',
       title: 'TodoList',
       text: 'Service HttpClient et rxResource pour les données, Signal Forms pour la saisie, CDK Dialog pour la modale.',
