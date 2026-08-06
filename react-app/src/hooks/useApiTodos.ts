@@ -5,17 +5,23 @@ import {
   TODOS_KEY,
   createTodo,
   fetchTodos,
-  nextLocalId,
   removeTodo,
   toggleTodo,
 } from "../api/todos";
 import type { Todo } from "../types";
 
-function optimisticOptions(project: (todos: Todo[]) => Todo[]) {
+/**
+ * `project` affiche la liste optimiste pendant l'appel ; `reconcile` reconstruit le cache à
+ * partir de la réponse de l'API, seule source de l'identifiant réel des tâches créées.
+ */
+function optimisticOptions<TResult>(
+  project: (todos: Todo[]) => Todo[],
+  reconcile: (result: TResult, todos: Todo[]) => Todo[]
+) {
   return {
     optimisticData: (current?: Todo[]) => project(current ?? []),
-    populateCache: (_result: unknown, current: Todo[] | undefined) =>
-      project(current ?? []),
+    populateCache: (result: TResult, current: Todo[] | undefined) =>
+      reconcile(result, current ?? []),
     revalidate: false,
     rollbackOnError: true,
   };
@@ -43,19 +49,23 @@ export function useApiTodos() {
 
   const create = useCallback(
     (title: string) => {
+      // Pas d'identifiant tant que l'API n'a pas répondu : la ligne optimiste s'affiche sans id.
       const optimistic: Todo = {
         userId: 1,
-        id: nextLocalId(todos ?? []),
+        id: undefined,
         title,
         completed: false,
       };
 
       return triggerCreate<Todo[]>(
         title,
-        optimisticOptions((current) => [optimistic, ...current])
+        optimisticOptions(
+          (current) => [optimistic, ...current],
+          (created, current) => [created, ...current]
+        )
       );
     },
-    [todos, triggerCreate]
+    [triggerCreate]
   );
 
   const { trigger: triggerToggle, isMutating: isToggling } = useSWRMutation(
@@ -67,10 +77,15 @@ export function useApiTodos() {
     (todo: Todo) =>
       triggerToggle<Todo[]>(
         todo,
-        optimisticOptions((current) =>
-          current.map((item) =>
-            item.id === todo.id ? { ...item, completed: !item.completed } : item
-          )
+        optimisticOptions<Todo>(
+          (current) =>
+            current.map((item) =>
+              item.id === todo.id
+                ? { ...item, completed: !item.completed }
+                : item
+            ),
+          (updated, current) =>
+            current.map((item) => (item.id === updated.id ? updated : item))
         )
       ),
     [triggerToggle]
@@ -82,13 +97,17 @@ export function useApiTodos() {
   );
 
   const remove = useCallback(
-    (todo: Todo) =>
-      triggerRemove<Todo[]>(
+    (todo: Todo) => {
+      const withoutTodo = (current: Todo[]) =>
+        current.filter((item) => item.id !== todo.id);
+
+      return triggerRemove<Todo[]>(
         todo,
-        optimisticOptions((current) =>
-          current.filter((item) => item.id !== todo.id)
+        optimisticOptions<void>(withoutTodo, (_, current) =>
+          withoutTodo(current)
         )
-      ),
+      );
+    },
     [triggerRemove]
   );
 

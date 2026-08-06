@@ -27,6 +27,13 @@
   white-space: nowrap;
 }
 
+.pending {
+  color: $color-muted;
+  font-size: 0.92rem;
+  font-style: italic;
+  white-space: nowrap;
+}
+
 input:checked + .label {
   color: $color-muted;
   text-decoration: line-through;

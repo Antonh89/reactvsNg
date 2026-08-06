@@ -1,16 +1,14 @@
 import type { Todo } from "../types";
 
-const BASE_URL = "https://jsonplaceholder.typicode.com/todos";
-const PRELOAD_COUNT = 20;
-const LAST_REMOTE_ID = 200;
+const BASE_URL = "http://localhost:3000/todos";
 
-export const TODOS_KEY = `${BASE_URL}?_limit=${PRELOAD_COUNT}`;
+export const TODOS_KEY = BASE_URL;
 
 function delay(): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, 2_000));
 }
 
-async function request<T>(url: string, init?: RequestInit): Promise<T> {
+async function send(url: string, init?: RequestInit): Promise<Response> {
   const response = await fetch(url, init);
 
   if (!response.ok) {
@@ -18,6 +16,12 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
       `Échec de la requête ${init?.method ?? "GET"} ${url} (${response.status})`
     );
   }
+
+  return response;
+}
+
+async function request<T>(url: string, init?: RequestInit): Promise<T> {
+  const response = await send(url, init);
 
   return (await response.json()) as T;
 }
@@ -41,34 +45,16 @@ export async function createTodo(title: string): Promise<Todo> {
 export async function toggleTodo(todo: Todo): Promise<Todo> {
   await delay();
 
-  if (todo.id > LAST_REMOTE_ID) {
-    return { ...todo, completed: !todo.completed };
-  }
-
-  await request<Todo>(`${BASE_URL}/${todo.id}`, {
+  return request<Todo>(`${BASE_URL}/${todo.id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ completed: !todo.completed }),
   });
-
-  return { ...todo, completed: !todo.completed };
 }
 
-export async function removeTodo(todo: Todo): Promise<number> {
+export async function removeTodo(todo: Todo): Promise<void> {
   await delay();
 
-  if (todo.id <= LAST_REMOTE_ID) {
-    await request<unknown>(`${BASE_URL}/${todo.id}`, { method: "DELETE" });
-  }
-
-  return todo.id;
-}
-
-export function nextLocalId(todos: Todo[]): number {
-  return (
-    todos.reduce(
-      (highest, todo) => Math.max(highest, todo.id),
-      LAST_REMOTE_ID
-    ) + 1
-  );
+  // L'API répond 204 sans corps : rien à désérialiser.
+  await send(`${BASE_URL}/${todo.id}`, { method: "DELETE" });
 }

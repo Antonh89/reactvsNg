@@ -15,3 +15,10 @@
     background: rgba($color-bg, 0.7);
   }
 }
+
+.pending {
+  color: $color-muted;
+  font-size: 0.92rem;
+  font-style: italic;
+  white-space: nowrap;
+}

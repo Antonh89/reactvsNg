@@ -125,18 +125,18 @@ export class TodosPage {
 
   private async createTodo(title: string): Promise<void> {
     const snapshot = this.todosResource.value();
-    const optimistic: Todo = {
-      userId: 1,
-      id: this.todoService.nextLocalId(snapshot),
-      title,
-      completed: false,
-    };
+    // Pas d'identifiant tant que l'API n'a pas répondu : la ligne optimiste s'affiche sans id.
+    const optimistic: Todo = { userId: 1, id: undefined, title, completed: false };
 
     this.actionError.set(null);
     this.todosResource.value.update((todos) => [optimistic, ...todos]);
 
     try {
-      await firstValueFrom(this.todoService.createTodo(title));
+      const created = await firstValueFrom(this.todoService.createTodo(title));
+      // On repère la ligne optimiste par son identité, elle n'a pas encore d'id à comparer.
+      this.todosResource.value.update((todos) =>
+        todos.map((item) => (item === optimistic ? created : item)),
+      );
       this.newTodo.set({ title: '' });
       this.addForm().reset();
     } catch {

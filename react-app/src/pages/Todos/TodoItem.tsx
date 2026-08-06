@@ -23,13 +23,18 @@ export function TodoItem({
         checked={todo.completed}
         onChange={() => onToggle(todo)}
       />
-      <Button
-        variant="ghost"
-        onClick={() => onRequestDelete(todo)}
-        aria-label={`Supprimer « ${todo.title} »`}
-      >
-        Supprimer
-      </Button>
+      {/* Tant que l'API n'a pas renvoyé d'identifiant, il n'y a rien à supprimer côté serveur. */}
+      {todo.id !== undefined ? (
+        <Button
+          variant="ghost"
+          onClick={() => onRequestDelete(todo)}
+          aria-label={`Supprimer « ${todo.title} »`}
+        >
+          Supprimer
+        </Button>
+      ) : (
+        <span className={styles.pending}>Création en cours</span>
+      )}
     </li>
   );
 }

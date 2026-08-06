@@ -3,12 +3,17 @@
   <span class="label">{{ todo().title }}</span>
 </label>
 
-<button
-  appButton
-  type="button"
-  variant="ghost"
-  [attr.aria-label]="'Supprimer « ' + todo().title + ' »'"
-  (click)="deleteRequested.emit(todo())"
->
-  Supprimer
-</button>
+<!-- Tant que l'API n'a pas renvoyé d'identifiant, il n'y a rien à supprimer côté serveur. -->
+@if (todo().id !== undefined) {
+  <button
+    appButton
+    type="button"
+    variant="ghost"
+    [attr.aria-label]="'Supprimer « ' + todo().title + ' »'"
+    (click)="deleteRequested.emit(todo())"
+  >
+    Supprimer
+  </button>
+} @else {
+  <span class="pending">Création en cours</span>
+}

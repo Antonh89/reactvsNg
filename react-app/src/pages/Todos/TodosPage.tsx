@@ -182,7 +182,7 @@ export function TodosPage() {
 
       {error ? (
         <p className={styles.alert}>
-          Impossible de charger les tâches depuis jsonplaceholder.
+          Impossible de charger les tâches : l'API locale est-elle démarrée ?
         </p>
       ) : null}
 
@@ -191,7 +191,7 @@ export function TodosPage() {
           <ul className={styles.list}>
             {visibleTodos.map((todo) => (
               <TodoItem
-                key={todo.id}
+                key={todo.id ?? "pending"}
                 todo={todo}
                 onToggle={handleToggle}
                 onRequestDelete={setPendingDeletion}

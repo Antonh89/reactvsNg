@@ -1,10 +1,13 @@
 # Angular 22 vs React 19 — comparaison sur deux applications jumelles
 
-Deux applications volontairement simples et **fonctionnellement identiques**, l'une en Angular, l'autre en React. Mêmes pages, mêmes composants réutilisables, même API distante, même UX : la seule variable est le framework.
+Deux applications volontairement simples et **fonctionnellement identiques**, l'une en Angular, l'autre en React. Mêmes pages, mêmes composants réutilisables, même API, même UX : la seule variable est le framework.
 
 ## Lancer
 
+L'API locale d'abord, les deux applications tapent dessus :
+
 ```bash
+cd back        && npm install && npm run dev     # http://localhost:3000
 cd react-app   && npm install && npm run dev     # http://localhost:5173
 cd angular-app && npm install && npm start       # http://localhost:4200
 ```
@@ -17,7 +20,7 @@ Chaque application propose trois pages :
 |---|---|
 | `/` | Accueil avec liens vers les autres pages |
 | `/counter` | Compteur avec décrémenter / réinitialiser / incrémenter |
-| `/todos` | TodoList préchargée depuis `jsonplaceholder.typicode.com/todos?_limit=20` |
+| `/todos` | TodoList chargée depuis l'API locale `back/` (`http://localhost:3000/todos`) |
 
 La TodoList permet d'ajouter une tâche (champ validé), de cocher son statut, de la supprimer via une modale de confirmation, et de filtrer sur **Tous / Complétés / Restants**.
 
@@ -59,12 +62,36 @@ La TodoList permet d'ajouter une tâche (champ validé), de cocher son statut, d
 - **Angular 22 exige TypeScript `>=6.0 <6.1`** alors que la dernière version publiée est 7.x. Ne pas « mettre à jour » TypeScript dans `angular-app`. Le projet React, lui, tourne bien en TypeScript 7.
 - **`@angular/cdk/overlay-prebuilt.css` est obligatoire** (déclaré dans `angular.json`), sinon la modale CDK s'affiche sans backdrop ni positionnement.
 - **`withFetch()` est déprécié en v22** : `FetchBackend` est déjà le backend par défaut de `provideHttpClient()`.
-- **jsonplaceholder ne persiste rien** et ne connaît que 200 tâches. Les deux applications font l'appel réseau puis appliquent la vérité localement, et court-circuitent l'appel pour les tâches créées localement (`id > 200`) qui renverraient un 404.
+- **L'identifiant d'une tâche créée vient du serveur.** Plutôt qu'un id provisoire fabriqué côté client, la ligne optimiste s'affiche avec `id: undefined` : le bouton « Supprimer » est masqué tant que l'identifiant est absent, ce qui évite un `DELETE` sur un id inexistant. La ligne est remplacée par la tâche renvoyée par l'API — React dans `populateCache`, Angular dans un `value.update()` après la réponse. Conséquence côté template : la clé de liste doit tolérer l'absence d'id (`key={todo.id ?? "pending"}`, `track todo.id ?? 'pending'`).
+- **`DELETE` répond `204` sans corps** : côté React, appeler `response.json()` sur cette réponse lève une erreur — il faut se contenter de vérifier `response.ok`. Angular, lui, mappe un corps vide sur `null` sans broncher.
+- **Le serveur ne persiste rien sur le disque** : le redémarrer remet les 20 tâches de `back/todos.json`.
+
+## API locale (`back/`)
+
+Un petit serveur Express 5 en TypeScript, exécuté directement par Node 24 (type stripping natif, pas d'étape de build). Au démarrage, `todos.json` est lu **une seule fois** et le tableau reste en mémoire : les routes lisent et modifient cet objet, rien n'est réécrit sur le disque. Redémarrer le serveur remet donc les 20 tâches d'origine.
+
+Les chemins et la forme des tâches reprennent ceux de jsonplaceholder, qui servait d'API avant : le `BASE_URL` des deux applications pointe désormais sur `http://localhost:3000/todos`.
+
+| Route | Effet |
+|---|---|
+| `GET /todos` | Liste, filtrable par `_start`, `_limit`, `userId`, `completed` |
+| `GET /todos/:id` | Une tâche, `404` si inconnue |
+| `POST /todos` | Crée (`title` requis, `completed` et `userId` par défaut) → `201` |
+| `PUT /todos/:id` | Remplace (`title` + `completed` requis) |
+| `PATCH /todos/:id` | Modifie les champs fournis (au moins un) |
+| `DELETE /todos/:id` | Supprime → `204` |
+
+Les corps et paramètres sont validés par zod : `400` avec la liste des champs fautifs, `404` sur identifiant inconnu.
 
 ## Structure
 
-```
+```text
 reactVsNg2/
+├── back/
+│   ├── index.ts                      serveur Express, chargement du json au boot
+│   ├── todos.router.ts               routes CRUD + validation zod
+│   ├── todos.store.ts                tableau en mémoire (list/find/insert/update/remove)
+│   └── todos.json                    20 tâches de départ
 ├── react-app/
 │   └── src/
 │       ├── api/todos.ts              fetcher + create/toggle/remove

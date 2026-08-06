@@ -57,10 +57,10 @@
   @if (isInitialLoading()) {
     <p class="state">Chargement des tâches…</p>
   } @else if (todosResource.error()) {
-    <p class="alert">Impossible de charger les tâches depuis jsonplaceholder.</p>
+    <p class="alert">Impossible de charger les tâches : l'API locale est-elle démarrée ?</p>
   } @else if (visibleTodos().length > 0) {
     <ul class="list">
-      @for (todo of visibleTodos(); track todo.id) {
+      @for (todo of visibleTodos(); track todo.id ?? 'pending') {
         <li>
           <app-todo-item
             [todo]="todo"
