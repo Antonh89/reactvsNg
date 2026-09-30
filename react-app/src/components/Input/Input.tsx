@@ -23,10 +23,7 @@ export function Input({
 
   return (
     <div className={styles.field}>
-      <label
-        className={clsx(styles.label, hideLabel && styles.labelHidden)}
-        htmlFor={inputId}
-      >
+      <label className={clsx(styles.label, hideLabel && styles.labelHidden)} htmlFor={inputId}>
         {label}
       </label>
       <input

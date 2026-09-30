@@ -12,9 +12,7 @@ async function send(url: string, init?: RequestInit): Promise<Response> {
   const response = await fetch(url, init);
 
   if (!response.ok) {
-    throw new Error(
-      `Échec de la requête ${init?.method ?? "GET"} ${url} (${response.status})`
-    );
+    throw new Error(`Échec de la requête ${init?.method ?? "GET"} ${url} (${response.status})`);
   }
 
   return response;
@@ -38,7 +36,7 @@ export async function createTodo(title: string): Promise<Todo> {
   return request<Todo>(BASE_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title, completed: false, userId: 1 }),
+    body: JSON.stringify({ title, completed: false }),
   });
 }
 

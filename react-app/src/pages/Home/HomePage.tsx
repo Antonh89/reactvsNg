@@ -24,19 +24,14 @@ export function HomePage() {
     <section className={styles.page}>
       <h1 className={styles.title}>Démo React 19</h1>
       <p className={styles.intro}>
-        Version React de la comparaison. React Router pour le routage,
-        react-hook-form pour les formulaires, SWR pour les données, Radix UI
-        pour la modale, CSS Modules et SCSS pour les styles.
+        Version React de la comparaison. React Router pour le routage, react-hook-form pour les
+        formulaires, SWR pour les données, Radix UI pour la modale, CSS Modules et SCSS pour les
+        styles.
       </p>
 
       <div className={styles.cards}>
         {cards.map((card) => (
-          <Card
-            key={card.to}
-            to={card.to}
-            title={card.title}
-            text={card.text}
-          />
+          <Card key={card.to} to={card.to} title={card.title} text={card.text} />
         ))}
       </div>
     </section>

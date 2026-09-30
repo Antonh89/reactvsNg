@@ -1,5 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormField, FormRoot, form, minLength, required } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
@@ -83,6 +83,19 @@ export class TodosPage {
     return todos;
   });
 
+  constructor() {
+    // Le titre de l'onglet affiche le nombre de tâches restantes, et reprend sa valeur en quittant la page.
+    effect((onCleanup) => {
+      const previousTitle = document.title;
+      const { remaining } = this.counts();
+      document.title = `TodoList · ${remaining} restante(s)`;
+
+      onCleanup(() => {
+        document.title = previousTitle;
+      });
+    });
+  }
+
   protected refreshTodos(): void {
     this.actionError.set(null);
     this.todosResource.reload();
@@ -126,7 +139,7 @@ export class TodosPage {
   private async createTodo(title: string): Promise<void> {
     const snapshot = this.todosResource.value();
     // Pas d'identifiant tant que l'API n'a pas répondu : la ligne optimiste s'affiche sans id.
-    const optimistic: Todo = { userId: 1, id: undefined, title, completed: false };
+    const optimistic: Todo = { id: undefined, title, completed: false };
 
     this.actionError.set(null);
     this.todosResource.value.update((todos) => [optimistic, ...todos]);

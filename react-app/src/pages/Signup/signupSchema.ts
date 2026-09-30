@@ -15,17 +15,12 @@ const OPTIONAL_EMAIL = z.union([
 export const signupSchema = z
   .object({
     email: OPTIONAL_EMAIL,
-    phone: z
-      .string()
-      .refine((value) => value === "" || FRENCH_PHONE.test(value), {
-        message:
-          "Le format du numéro français est invalide (ex. 06 12 34 56 78).",
-      }),
+    phone: z.string().refine((value) => value === "" || FRENCH_PHONE.test(value), {
+      message: "Le format du numéro français est invalide (ex. 06 12 34 56 78).",
+    }),
     nickname: z.string().min(1, "Le pseudonyme est obligatoire."),
     password: z.string().min(1, "Le mot de passe est obligatoire."),
-    confirmPassword: z
-      .string()
-      .min(1, "La confirmation du mot de passe est obligatoire."),
+    confirmPassword: z.string().min(1, "La confirmation du mot de passe est obligatoire."),
   })
   .refine((values) => values.email !== "" || values.phone !== "", {
     message: "Renseignez au moins une adresse email ou un numéro de téléphone.",

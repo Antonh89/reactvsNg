@@ -22,17 +22,11 @@ const emptyForm: SignupFormInput = {
 };
 
 function createAccount(account: SignupFormInput): Promise<string> {
-  return new Promise((resolve) =>
-    setTimeout(() => resolve(account.nickname.trim()), SUBMIT_DELAY)
-  );
+  return new Promise((resolve) => setTimeout(() => resolve(account.nickname.trim()), SUBMIT_DELAY));
 }
 
 function useSignupForm() {
-  const { register: registerRHF, ...form } = useForm<
-    SignupFormInput,
-    unknown,
-    SignupFormOutput
-  >({
+  const { register: registerRHF, ...form } = useForm<SignupFormInput, unknown, SignupFormOutput>({
     resolver: zodResolver(signupSchema),
     mode: "onChange",
     defaultValues: emptyForm,
@@ -43,18 +37,14 @@ function useSignupForm() {
    * `contact` en dépendance pour que l'alerte globale soit revalidée à chaque frappe.
    */
   const register: typeof registerRHF = (name, options) => {
-    let deps: FieldPath<SignupFormInput> | FieldPath<SignupFormInput>[] = [
-      CONTACT_PATH,
-    ];
+    let deps: FieldPath<SignupFormInput> | FieldPath<SignupFormInput>[] = [CONTACT_PATH];
 
     if (!options) {
       return registerRHF(name, { deps });
     }
 
     if (options.deps) {
-      deps = Array.isArray(options.deps)
-        ? [...options.deps, ...deps]
-        : [options.deps, ...deps];
+      deps = Array.isArray(options.deps) ? [...options.deps, ...deps] : [options.deps, ...deps];
     }
 
     return registerRHF(name, {
@@ -89,15 +79,13 @@ export function SignupPage() {
     <section className={styles.page}>
       <h1 className={styles.title}>Inscription</h1>
       <p className={styles.intro}>
-        Schéma <code>Zod</code> branché sur react-hook-form via{" "}
-        <code>zodResolver</code> : validation par champ, règles inter-champs
-        (contact, mots de passe) et bouton actif uniquement si tout est valide.
+        Schéma <code>Zod</code> branché sur react-hook-form via <code>zodResolver</code> :
+        validation par champ, règles inter-champs (contact, mots de passe) et bouton actif
+        uniquement si tout est valide.
       </p>
 
       {createdNickname ? (
-        <p className={styles.success}>
-          Bienvenue {createdNickname} ! Le compte a été créé.
-        </p>
+        <p className={styles.success}>Bienvenue {createdNickname} ! Le compte a été créé.</p>
       ) : null}
 
       <form className={styles.form} onSubmit={onSubmit} noValidate>
@@ -150,9 +138,7 @@ export function SignupPage() {
           {...register("confirmPassword")}
         />
 
-        {errors.contact?.message ? (
-          <p className={styles.alert}>{errors.contact.message}</p>
-        ) : null}
+        {errors.contact?.message ? <p className={styles.alert}>{errors.contact.message}</p> : null}
 
         <Button type="submit" disabled={!isValid || isSubmitting}>
           {isSubmitting ? "Création…" : "Valider"}

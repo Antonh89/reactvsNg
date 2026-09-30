@@ -21,9 +21,7 @@ export function Layout() {
                 key={to}
                 to={to}
                 end={end}
-                className={({ isActive }) =>
-                  clsx(styles.link, isActive && styles.linkActive)
-                }
+                className={({ isActive }) => clsx(styles.link, isActive && styles.linkActive)}
               >
                 {label}
               </NavLink>

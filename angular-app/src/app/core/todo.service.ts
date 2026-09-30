@@ -16,9 +16,7 @@ export class TodoService {
   }
 
   createTodo(title: string): Observable<Todo> {
-    return this.http
-      .post<Todo>(BASE_URL, { title, completed: false, userId: 1 })
-      .pipe(delay(ACTION_DELAY_MS));
+    return this.http.post<Todo>(BASE_URL, { title, completed: false }).pipe(delay(ACTION_DELAY_MS));
   }
 
   toggleTodo(todo: Todo): Observable<Todo> {

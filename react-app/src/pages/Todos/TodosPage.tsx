@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/Button/Button";
 import { ConfirmDialog } from "../../components/ConfirmDialog/ConfirmDialog";
@@ -57,6 +57,16 @@ export function TodosPage() {
       remaining: list.length - completed,
     };
   }, [todos]);
+
+  // Le titre de l'onglet affiche le nombre de tâches restantes, et reprend sa valeur en quittant la page.
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = `TodoList · ${counts.remaining} restante(s)`;
+
+    return () => {
+      document.title = previousTitle;
+    };
+  }, [counts.remaining]);
 
   const visibleTodos = useMemo(() => {
     const list = todos ?? [];
@@ -123,8 +133,8 @@ export function TodosPage() {
     <section className={styles.page}>
       <h1 className={styles.title}>TodoList</h1>
       <p className={styles.intro}>
-        Chargement via SWR, mutations optimistes via <code>useSWRMutation</code>
-        , saisie validée par react-hook-form.
+        Chargement via SWR, mutations optimistes via <code>useSWRMutation</code>, saisie validée par
+        react-hook-form.
       </p>
 
       <form className={styles.form} onSubmit={onSubmit} noValidate>
@@ -147,11 +157,7 @@ export function TodosPage() {
       </form>
 
       <div className={styles.toolbar}>
-        <div
-          className={styles.filters}
-          role="group"
-          aria-label="Filtrer par statut"
-        >
+        <div className={styles.filters} role="group" aria-label="Filtrer par statut">
           {filterOptions.map((option) => (
             <Button
               key={option.value}
@@ -165,20 +171,14 @@ export function TodosPage() {
           ))}
         </div>
 
-        <Button
-          variant="secondary"
-          disabled={isReadonly}
-          onClick={handleRefresh}
-        >
+        <Button variant="secondary" disabled={isReadonly} onClick={handleRefresh}>
           {isRefreshing ? "Rafraîchissement…" : "Rafraîchir"}
         </Button>
       </div>
 
       {actionError ? <p className={styles.alert}>{actionError}</p> : null}
 
-      {isLoading ? (
-        <p className={styles.state}>Chargement des tâches…</p>
-      ) : null}
+      {isLoading ? <p className={styles.state}>Chargement des tâches…</p> : null}
 
       {error ? (
         <p className={styles.alert}>

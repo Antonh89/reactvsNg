@@ -21,12 +21,7 @@ export function Button({
   return (
     <button
       type={type}
-      className={clsx(
-        styles.button,
-        styles[variant],
-        active && styles.active,
-        className,
-      )}
+      className={clsx(styles.button, styles[variant], active && styles.active, className)}
       {...rest}
     >
       {children}

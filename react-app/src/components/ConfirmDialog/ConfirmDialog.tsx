@@ -29,9 +29,7 @@ export function ConfirmDialog({
         <Dialog.Overlay className={styles.overlay} />
         <Dialog.Content className={styles.content}>
           <Dialog.Title className={styles.title}>{title}</Dialog.Title>
-          <Dialog.Description className={styles.description}>
-            {description}
-          </Dialog.Description>
+          <Dialog.Description className={styles.description}>{description}</Dialog.Description>
 
           <div className={styles.actions}>
             <Dialog.Close asChild>

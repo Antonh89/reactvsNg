@@ -1,0 +1,73 @@
+{
+  // Terminal > Run Task… > « Démo : tout lancer » démarre l'API et les deux applications
+  // dans trois terminaux côte à côte, et --open ouvre les deux fronts dans le navigateur.
+  // Chaque tâche est « background » : VS Code la considère prête dès que le serveur affiche
+  // sa ligne de démarrage (endsPattern ci-dessous).
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Démo : tout lancer",
+      "dependsOn": ["API (back)", "React (react-app)", "Angular (angular-app)"],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "label": "API (back)",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/back" },
+      "isBackground": true,
+      "presentation": { "group": "demo", "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": {
+        "owner": "back",
+        "pattern": { "regexp": "^__aucun_probleme__$" },
+        "background": {
+          "activeBegins": true,
+          "beginsPattern": "tâches chargées|Restarting",
+          "endsPattern": "API prête sur"
+        }
+      }
+    },
+    {
+      "label": "React (react-app)",
+      "type": "shell",
+      "command": "npm run dev -- --open",
+      "options": { "cwd": "${workspaceFolder}/react-app" },
+      "isBackground": true,
+      "presentation": { "group": "demo", "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": {
+        "owner": "react",
+        "pattern": { "regexp": "^__aucun_probleme__$" },
+        "background": {
+          "activeBegins": true,
+          "beginsPattern": "VITE v",
+          "endsPattern": "Local:"
+        }
+      }
+    },
+    {
+      "label": "Angular (angular-app)",
+      "type": "shell",
+      "command": "npm start -- --open",
+      "options": { "cwd": "${workspaceFolder}/angular-app" },
+      "isBackground": true,
+      "presentation": { "group": "demo", "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": {
+        "owner": "angular",
+        "pattern": { "regexp": "^__aucun_probleme__$" },
+        "background": {
+          "activeBegins": true,
+          "beginsPattern": "Building|Changes detected",
+          "endsPattern": "Application bundle generation (complete|failed)|Watch mode enabled"
+        }
+      }
+    },
+    {
+      "label": "Démo : installer les dépendances",
+      "type": "shell",
+      "command": "npm install --prefix back && npm install --prefix react-app && npm install --prefix angular-app",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    }
+  ]
+}

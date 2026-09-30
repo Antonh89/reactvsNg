@@ -9,11 +9,7 @@ interface TodoItemProps {
   onRequestDelete: (todo: Todo) => void;
 }
 
-export function TodoItem({
-  todo,
-  onToggle,
-  onRequestDelete,
-}: Readonly<TodoItemProps>) {
+export function TodoItem({ todo, onToggle, onRequestDelete }: Readonly<TodoItemProps>) {
   return (
     <li className={styles.item}>
       <Checkbox

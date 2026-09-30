@@ -11,13 +11,7 @@ interface CardProps {
   children?: ReactNode;
 }
 
-export function Card({
-  title,
-  text,
-  to,
-  className,
-  children,
-}: Readonly<CardProps>) {
+export function Card({ title, text, to, className, children }: Readonly<CardProps>) {
   const body = (
     <>
       <span className={styles.cardTitle}>{title}</span>

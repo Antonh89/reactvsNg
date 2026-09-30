@@ -2,8 +2,7 @@ import clsx from "clsx";
 import type { InputHTMLAttributes, ReactNode, Ref } from "react";
 import styles from "./Checkbox.module.scss";
 
-interface CheckboxProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
+interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
   label: ReactNode;
   struck?: boolean;
   ref?: Ref<HTMLInputElement>;
@@ -21,17 +20,9 @@ export function Checkbox({
 
   return (
     <label className={clsx(styles.wrapper, className)} htmlFor={inputId}>
-      <input
-        {...rest}
-        id={inputId}
-        ref={ref}
-        type="checkbox"
-        className={styles.input}
-      />
+      <input {...rest} id={inputId} ref={ref} type="checkbox" className={styles.input} />
       <span className={styles.box} aria-hidden="true" />
-      <span className={clsx(styles.text, struck && styles.textStruck)}>
-        {label}
-      </span>
+      <span className={clsx(styles.text, struck && styles.textStruck)}>{label}</span>
     </label>
   );
 }

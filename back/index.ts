@@ -19,7 +19,7 @@ app.get('/', (_req, res) => {
   res.json({
     name: 'reactVsNg2 API',
     endpoints: [
-      'GET    /todos?_start=&_limit=&userId=&completed=',
+      'GET    /todos?_start=&_limit=&completed=',
       'GET    /todos/:id',
       'POST   /todos',
       'PUT    /todos/:id',

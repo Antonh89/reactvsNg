@@ -12,6 +12,17 @@ cd react-app   && npm install && npm run dev     # http://localhost:5173
 cd angular-app && npm install && npm start       # http://localhost:4200
 ```
 
+### Depuis VS Code
+
+Le fichier `.vscode/tasks.json` fournit une tâche qui démarre les trois projets d'un coup :
+
+1. **Terminal › Run Task…** (ou `Ctrl+Shift+P` › *Tasks: Run Task*)
+2. Choisir **Démo : tout lancer**
+
+L'API, React et Angular démarrent en parallèle dans trois terminaux côte à côte. Dès qu'ils sont prêts, les deux fronts s'ouvrent tout seuls dans le navigateur (`http://localhost:5173` et `http://localhost:4200`). Chaque terminal peut être arrêté séparément, et chaque projet reste lançable seul (tâches *API (back)*, *React (react-app)*, *Angular (angular-app)*).
+
+Au premier lancement, exécuter d'abord la tâche **Démo : installer les dépendances**, qui fait le `npm install` des trois projets.
+
 ## Périmètre couvert
 
 Chaque application propose trois pages :
@@ -74,9 +85,9 @@ Les chemins et la forme des tâches reprennent ceux de jsonplaceholder, qui serv
 
 | Route | Effet |
 |---|---|
-| `GET /todos` | Liste, filtrable par `_start`, `_limit`, `userId`, `completed` |
+| `GET /todos` | Liste, filtrable par `_start`, `_limit`, `completed` |
 | `GET /todos/:id` | Une tâche, `404` si inconnue |
-| `POST /todos` | Crée (`title` requis, `completed` et `userId` par défaut) → `201` |
+| `POST /todos` | Crée (`title` requis, `completed` à `false` par défaut) → `201` |
 | `PUT /todos/:id` | Remplace (`title` + `completed` requis) |
 | `PATCH /todos/:id` | Modifie les champs fournis (au moins un) |
 | `DELETE /todos/:id` | Supprime → `204` |

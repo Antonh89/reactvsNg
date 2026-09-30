@@ -2,7 +2,6 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 export interface Todo {
-  userId: number;
   id: number;
   title: string;
   completed: boolean;
@@ -29,9 +28,8 @@ export function findTodo(id: number): Todo | undefined {
 }
 
 export function insertTodo(input: Omit<Todo, "id">): Todo {
-  // Champs listés dans l'ordre de jsonplaceholder pour que toutes les réponses se ressemblent.
+  // L'identifiant en premier, comme dans todos.json, pour que toutes les réponses se ressemblent.
   const created: Todo = {
-    userId: input.userId,
     id: nextId(),
     title: input.title,
     completed: input.completed,
